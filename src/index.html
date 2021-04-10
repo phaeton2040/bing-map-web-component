@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="/build/bing-map.esm.js"></script>
+    <script nomodule src="/build/bing-map.js"></script>
+  </head>
+  <body style="margin: 0; padding: 0;">
+    <bing-map map-key="Your Key" map-options='{
+      "showMapTypeSelector": true,
+      "center": [ 53.91170120239257, 27.45739936828614 ],
+      "zoom": 15,
+      "mapTypeId": "road",
+      "navigationBarMode": "square"
+    }'></bing-map>
+  </body>
+
+  <script>
+    const bingMapElem = document.querySelector('bing-map');
+
+    bingMapElem.addEventListener('mapReady', (event) => {
+      const map = event.detail;
+      console.log('Map ready:', map);
+
+      const center = map.getCenter();
+      const pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
+      const infobox = new Microsoft.Maps.Infobox(center, { title: 'Map Center', description: 'Some infobox description', visible: false });
+      
+      infobox.setMap(map);
+      Microsoft.Maps.Events.addHandler(pushpin, 'click', function () {
+          infobox.setOptions({ visible: true });
+      });
+      map.entities.push(pushpin);
+    })
+  </script>
+</html>

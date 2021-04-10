@@ -1,0 +1,3 @@
+# Bing map web component
+
+

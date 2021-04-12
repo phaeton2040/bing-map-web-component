@@ -1,7 +1,7 @@
 {
   "name": "bing-map",
   "version": "0.0.1",
-  "description": "Stencil Component Starter",
+  "description": "Bing map web component wrapper",
   "main": "dist/index.cjs.js",
   "module": "dist/custom-elements/index.js",
   "es2015": "dist/esm/index.mjs",
@@ -17,8 +17,8 @@
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test": "stencil test --spec",
+    "test.watch": "stencil test --spec --watchAll",
     "generate": "stencil generate"
   },
   "dependencies": {

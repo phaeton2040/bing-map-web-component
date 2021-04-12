@@ -1,10 +1,5 @@
-import { Component, Prop, h, Event, EventEmitter } from '@stencil/core';
-import { parseMapOptions } from '../../utils/utils';
-
-declare var document;
-declare var Microsoft;
-
-const BING_MAP_URL = `https://www.bing.com/api/maps/mapcontrol?callback=bingMapReady`
+import { Component, Prop, h, EventEmitter, Event } from '@stencil/core';
+import { MapService } from '../../services/map.service';
 
 @Component({
   tag: 'bing-map',
@@ -25,44 +20,25 @@ export class BingMap {
 
   private root: HTMLHtmlElement;
   private head: HTMLHeadElement;
-  private map: any;
   private mapElem: any;
+  private mapService: MapService;
 
-  componentDidLoad() {
-    const script = document.createElement('script');
-
-    script.type = 'text/javascript';
-    script.async = true;
-    script.defer = true;
-    script.src = `${BING_MAP_URL}&key=${this.mapKey}`;
-
-    this.head.appendChild(script);
-
-    (window as any).bingMapReady = () => {
-      this.initMap();
-    };
+  constructor() {
+    this.mapService = new MapService(this.fireEvent.bind(this));
   }
 
-  private initMap() {
-    try {
-      this.mapOptions = parseMapOptions(JSON.parse(this.mapOptions));
-      this.map = new Microsoft.Maps.Map(this.mapElem, this.mapOptions);
-  
-      const linkArray = Array.from(document.querySelectorAll('link[type="text/css"]')) as HTMLLinkElement[];
-  
-      linkArray.filter((element: HTMLLinkElement) => {
-        return element.href.includes('bing');
-      }).forEach((element: HTMLLinkElement) => {
-        this.head.appendChild(element);
-      });
-  
-      this.mapReady.emit(this.map);
-      this.root.style.display = 'block';
-    } catch (err) {
-      this.mapReady.emit({
-        error: err
-      })
-    }
+  fireEvent(args) {
+    this.mapReady.emit(args);
+  }
+
+  componentDidLoad() {
+    this.mapService.init({
+      key: this.mapKey,
+      head: this.head,
+      root: this.root,
+      mapElem: this.mapElem,
+      mapOptions: this.mapOptions
+    });
   }
 
   render() {
